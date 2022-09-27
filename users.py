@@ -9,7 +9,7 @@ class User:
         self.last_name = data['last_name'] 
         self.email = data['email'] 
         self.created_at = data['created_at'] 
-        self.updated_at = data['updated_at'] 
+        self.update_at = data['update_at'] 
 
     @classmethod
     def guardar(cls, formulario):
@@ -18,6 +18,28 @@ class User:
         result = connectToMySQL('esquema_usuarios').query_db(query, formulario)
         return result
 
+    @classmethod
+    def muestra_usuario(cls):
+        query = "SELECT * FROM users"
+        results = connectToMySQL('esquema_usuarios').query_db(query)
+        #tengo un diccionario:
+        #[
+        # {"id":1,"first_name":"Juana", "last_name":"De Arco" etc etc etc}
+        #luego recibo un segundo diccionario:
+        # {"id":2,"first_name":"Elena", "last_name":"De Troya" etc etc etc}
+        # ]
+        #tengo que transformar los diccionarios en instancias de usuarios// recorriendo la lista y transformandolos en instancias de usuarios
+        users = []
+        for u in results: # en u voy a estar guardando mi diccionario
+            user = cls(u) #user = User(u) -> {"id":1,"first_name":"Juana", "last_name":"De Arco" etc etc etc}
+            users.append(user)
+        return users
 
+    @classmethod
+    def borrar(cls, formulario):
+        #formulario = {"id":"1"}
+        query = "DELETE FROM users WHERE id = %(id)s" #interpolacion
+        result = connectToMySQL('esquema_usuarios').query_db(query,formulario)
+        return result
 
 
