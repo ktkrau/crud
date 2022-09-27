@@ -26,6 +26,17 @@ def delete(id):
     User.borrar(formulario)
     return redirect('/')
 
+@app.route('/edit/<int:id>')
+def edit(id):
+    formulario = {"id":id}
+    user = User.mostrar(formulario) #Instancia de usuario basado en el id de la url
+    return render_template('edit.html', usuario = user)
+
+@app.route('/update', methods=['POST'])
+def update():
+    #request.form = diccionario con el formulario de edit.html
+    User.actualizar(request.form)
+    return redirect('/')
 
 
 

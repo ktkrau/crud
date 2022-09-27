@@ -1,3 +1,4 @@
+from multiprocessing.forkserver import connect_to_new_process
 from mysqlconnection import connectToMySQL
 
 class User:
@@ -41,5 +42,25 @@ class User:
         query = "DELETE FROM users WHERE id = %(id)s" #interpolacion
         result = connectToMySQL('esquema_usuarios').query_db(query,formulario)
         return result
+
+
+    @classmethod
+    def mostrar(cls, formulario):
+        #formulario= {"id":1}
+        query = "SELECT * FROM users WHERE id = %(id)s"
+        result = connectToMySQL('esquema_usuarios').query_db(query,formulario)
+        #result=[
+        # {"id":1,"first_name":"Elena","last_name":"De Troya" etc etc}]
+        diccionario = result[0] #diccionario = {"id":1,"first_name":"Elena","last_name":"De Troya" etc etc}]
+        usuario= cls(diccionario) #usuario = User(diccionario)
+        return usuario
+
+    @classmethod
+    def actualizar(cls, formulario): #recibiendo el formulario nuevo
+        #formulario = {"id":1,"first_name":"Elena","last_name":"De Troya" etc etc}
+        query = "UPDATE users SET first_name = %(first_name)s, last_name = %(last_name)s, email = %(email)s WHERE id = %(id)s"
+        result = connectToMySQL('esquema_usuarios').query_db(query, formulario)
+        return result
+
 
 
